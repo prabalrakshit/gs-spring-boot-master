@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30" packages="com.microsoft.applicationinsights.log4j.v2">
+    <Properties>
+        <Property name="LOG_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex
+        </Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+		<!-- Rolling File Appender -->
+		<RollingFile name="FileAppender" fileName="logs/log4j2-demo.log" 
+		             filePattern="logs/log4j2-demo-%d{yyyy-MM-dd}-%i.log">
+		    <PatternLayout>
+		        <Pattern>${LOG_PATTERN}</Pattern>
+		    </PatternLayout>
+		    <Policies>
+		        <SizeBasedTriggeringPolicy size="10MB" />
+		    </Policies>
+		    <DefaultRolloverStrategy max="10"/>
+		</RollingFile>        
+ 		<!-- Azure Application Insights Appender -->
+ 		<ApplicationInsightsAppender name="aiAppender" instrumentationKey="b5b96d1a-1d6d-4e3d-af2b-4174ba8898e1" />      
+    </Appenders>
+    <Loggers>
+        <Logger name="com.example.springboot" level="info" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="aiAppender" />
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="aiAppender" />
+        </Root>
+    </Loggers>
+</Configuration>
